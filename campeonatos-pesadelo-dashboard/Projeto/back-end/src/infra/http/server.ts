@@ -10,11 +10,8 @@ import '../../database/connection';
 import '../../shared/containers';
 
 import routes from './routes/index.routes';
-import cors from 'cors';
 
 const app = express();
-
-app.use(cors({ origin: '*' }))
 
 app.use(express.json());
 app.use(routes);
