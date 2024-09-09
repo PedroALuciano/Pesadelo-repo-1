@@ -1,13 +1,17 @@
-import { FC, FocusEvent, useCallback, useRef, useState } from 'react';
+import { FC, FocusEvent, useCallback, useEffect, useRef, useState } from 'react';
 import ReactSelect, { GroupBase, SelectInstance } from 'react-select';
 import { IOption, ISelect } from './interfaces';
 import { Container, Label } from './styles';
 import { Error } from '../Input/styles';
 
-export const Select: FC<ISelect> = ({ name, options, label, placeholder, error, ...rest }) => {
+export const Select: FC<ISelect> = ({ name, options, label, placeholder, error, value, ...rest }) => {
   const selectRef = useRef<SelectInstance<IOption, false, GroupBase<IOption>>>(null);
 
   const [focused, setFocused] = useState(rest.autoFocus || false);
+
+  useEffect(() => {
+    setFocused(!(typeof value === 'undefined'));
+  }, [value])
 
   const handleFocus = useCallback((event: FocusEvent<HTMLInputElement>) => {
     setFocused(true);
@@ -32,12 +36,14 @@ export const Select: FC<ISelect> = ({ name, options, label, placeholder, error, 
         inputId={name}
         options={options}
         isMulti={false}
+        value={value}
         onFocus={handleFocus}
         onBlur={handleBlur}
         styles={{
           menu: (base) => ({
             ...base,
             backgroundColor: '#fff',
+            zIndex: 100,
           }),
           option: (base, state) => ({
             ...base,
@@ -50,6 +56,7 @@ export const Select: FC<ISelect> = ({ name, options, label, placeholder, error, 
             border: '1px solid #282828',
             borderRadius: 3,
             height: 40,
+            background: '#fff',
           }),
          }}
         {...rest}
